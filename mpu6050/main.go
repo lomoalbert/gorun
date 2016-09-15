@@ -13,6 +13,7 @@ import (
 
 //dt 循环间隔,用于积分
 var dt float64 = 0.01
+//角度
 var angle float64
 var weight float64 = 0.98
 
@@ -26,6 +27,7 @@ func main() {
 		gobot.Every(time.Millisecond*time.Duration(dt*1000), func() {
 			//fmt.Println("Accelerometer", mpu6050.Accelerometer,"Gyroscope", mpu6050.Gyroscope,"Temperature", mpu6050.Temperature)
 			angle = weight*(angle + float64(mpu6050.Gyroscope.Y)*dt)+(1-weight)*float64(mpu6050.Accelerometer.X)
+			angle = angle + float64(mpu6050.Gyroscope.Y)
 			fmt.Println(int(angle/100))
 		})
 	}

@@ -1,0 +1,1 @@
+GOARCH="arm" go build main.go && scp main pi@192.168.0.111:/home/pi/bin/
