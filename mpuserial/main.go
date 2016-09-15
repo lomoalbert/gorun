@@ -3,9 +3,11 @@ package mpuserial
 import (
 	"github.com/tarm/serial"
 	"math"
+	"log"
 )
 
-var xrolloffset float64 = 1.0
+var xrolloffset float64 = 2.6
+var yacceoffset float64 = 0.4
 
 func read(port *serial.Port, i int) []byte {
 	b := make([]byte, i)
@@ -71,6 +73,7 @@ func NewMPU() (*MPU, error) {
 }
 
 func (mpu *MPU)Start() {
+	log.Println("Starting")
 	for {
 		buf := read(mpu.Port, 11)
 		if buf[1] == 0x53 {
@@ -86,6 +89,7 @@ func (mpu *MPU)Start() {
 			}
 		} else if buf[1] == 0x51 {
 			yacce, err := getyacce(buf)
+			yacce = yacce - yacceoffset
 			if err != nil {
 				continue
 			}
