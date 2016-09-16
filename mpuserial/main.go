@@ -45,14 +45,21 @@ func getxroll(frame []byte) (float64, error) {
 	return xroll, nil
 }
 
+func getxspeed(frame []byte) (float64, error) {
+	xspeed := float64(int16(frame[3]) << 8 | int16(frame[2])) * 2000 / 32768
+	return xspeed, nil
+}
+
 type MPU struct {
-	Conf  *serial.Config
-	Port  *serial.Port
-	XRoll float64
-	Yacce float64
-	PWM   float64
-	K1    float64
-	K2    float64
+	Conf   *serial.Config
+	Port   *serial.Port
+	XRoll  float64
+	Yacce  float64
+	Xspeed float64
+	PWM    float64
+	K1     float64  //角度权重
+	K2     float64  //加速度权重
+	K3     float64  //速度权重
 }
 
 func NewMPU() (*MPU, error) {
@@ -94,10 +101,16 @@ func (mpu *MPU)Start() {
 				continue
 			}
 			mpu.Yacce = yacce
+		}else if buf[1] == 0x52 {
+			xspeed,err := getxspeed(buf)
+			if err != nil {
+				continue
+			}
+			mpu.Xspeed = xspeed
 		}
 
-		pwm :=  mpu.XRoll*mpu.K1 + mpu.Yacce*mpu.K2
-		//go log.Println(mpu.K1,mpu.K2,mpu.XRoll,mpu.Yacce,pwm)
+		pwm :=  mpu.XRoll*mpu.K1 + mpu.Yacce*mpu.K2 + mpu.Xspeed *mpu.K3
+		//go log.Println(mpu.K1,mpu.K2,mpu.XRoll,mpu.Yacce,mpu.Yspped,pwm)
 		var dir float64 = 1
 		if pwm <0 {
 			dir = -1
