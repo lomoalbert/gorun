@@ -18,13 +18,11 @@ func read(port *serial.Port, i int) []byte {
 		b[t] = b1[0]
 		sum += n
 	}
-	if b[0]!=0x55{
-		align(port)
-	}
 	return b
 }
 
 func align(port *serial.Port) {
+	log.Println("serial port align byte")
 	b := make([]byte, 1)
 	for {
 		port.Read(b)
@@ -83,6 +81,11 @@ func (mpu *MPU)Start() {
 	log.Println("Starting")
 	for {
 		buf := read(mpu.Port, 11)
+		if buf[0]!=0x55{
+			log.Println(buf)
+			align(mpu.Port)
+			continue
+		}
 		if buf[1] == 0x53 {
 			xroll, err := getxroll(buf)
 			xroll = xroll - xrolloffset

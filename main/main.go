@@ -8,6 +8,7 @@ import (
 	"github.com/lomoalbert/gorun/mpuserial"
 	"log"
 	"math"
+	//"github.com/lomoalbert/gorun/speedometer"
 )
 
 var (
@@ -103,8 +104,8 @@ func main() {
 	mpu.K2 = 1.0/20 //分母 即为PWM满偏时的加速度，0-9.8
 	mpu.K3 = 1.0/800
 	go mpu.Start()
-	// Set pin to output mode
-
+	//status := speedometer.SpeedOmeter()
+	//log.Println(status)
 	// Toggle pin 20 times
 	//time.Sleep(time.Hour)
 	motor.run(mpu)
