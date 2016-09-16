@@ -99,9 +99,9 @@ func main() {
 	//mpu.K2 = 0.5/9.8
 	//mpu.K1 = 2.9/90
 	//mpu.K2 = 0.33/9.8
-	mpu.K1 = 1.0/10  //分母 即为PWM满偏时的角度，0-90
-	mpu.K2 = 1.0/10 //坟墓 即为PWM满偏时的加速度，0-9.8
-	mpu.K3 = 1.0/360
+	mpu.K1 = 1.0/15  //分母 即为PWM满偏时的角度，0-90
+	mpu.K2 = 1.0/20 //分母 即为PWM满偏时的加速度，0-9.8
+	mpu.K3 = 1.0/800
 	go mpu.Start()
 	// Set pin to output mode
 
